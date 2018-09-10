@@ -1,0 +1,6 @@
+x = input("What's your name?")
+print("Hello, "+x+"!")
+y = input("")
+print("Today's date is Sept.9th, 2018")
+input("")
+print("Bye, have a nice day!")
