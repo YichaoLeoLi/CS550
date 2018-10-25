@@ -36,8 +36,8 @@ def mandel1():# the first picture
 				z = z**2 + c#the formula of mandelbrot set
 
 
-			r = (0)%256
-			g = 100+(-15*i)%175
+			r = 0
+			g = 100+(-15*i)%175#This algorithm draws a gradient of color, and I mod it by 175 to restrict its period
 			b = 100+(-10*i)%175
 			image.putpixel((x,y),(r,g,b))
 
@@ -66,7 +66,7 @@ def mandel2():
 				z = z**2 + c
 
 
-			r = 100+(25*i)%50
+			r = 100+(25*i)%50#In this one, I used 25*i to make the value comparatively large, but modding it by 50 can make it cycle really fast. Therefore, color blocks that are close to each other may have different colors, but blocks that have another block between them can have similar colors. The original picture looks like a snowflake, but doing this make the snowflake not that obvious; instead, the picture looks like five pillars.
 			g = 100+(20*i)%50
 			b = 0
 			image.putpixel((x,y),(r,g,b))
@@ -100,12 +100,12 @@ def Julia():
 			b = random.randint(0,50)
 				
 
-			if i <= 20:
+			if i <= 20:#For anything other thant the central piece of the Julia set, the rgb value of each pixel is 20*a, a random number between 0 and 1. This creates noise in areas other than the central piece, which I think is cool.
 				r = 20*a
 				g = 20*a
 				b = 20*a
 
-			else:
+			else: #I made these choices because in this way the picture looks golden, which is cool. I added b also to create some slight noises in the picture
 				r = 20*i+-b
 				g = 10*i+-b
 				b = 5*i+-b
