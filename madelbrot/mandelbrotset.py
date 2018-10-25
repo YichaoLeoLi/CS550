@@ -70,7 +70,7 @@ def set():
 					c=c15
 				elif m == 15:
 					c=c16
-			image.putpixel((i,j),(c,0,0))
+			image.putpixel((i,j),(0,c,0))
 			print (i,j, m)
 			print(a,b)
 
@@ -81,4 +81,4 @@ imgx = 512
 imgy = 512
 image = Image.new("RGB", (imgx, imgy))
 set()
-image.save('madelbrot1.png', "PNG")
+image.save('madelbrot2.png', "PNG")
