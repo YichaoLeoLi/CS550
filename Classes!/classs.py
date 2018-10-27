@@ -7,11 +7,11 @@ class Leo:
 
 	#constructor
 	#scale out of 100
-	def __init__(self, homework):#homework here is a variable that holds a value
+	def __init__(self):#homework here is a variable that holds a value
 		self.fullness = 5
 		self.energy = 5
 		self.happiness = 5
-		self.homework = homework#self.homework is the class property
+		self.homework = 0#self.homework is the class property
 
 
 		#methods
@@ -53,6 +53,7 @@ class Leo:
 
 #print(leo1.name)#accessing the property outside fo the calss
 
+leo1 = Leo
 while True:
 	print(leo1.stats())
 	choice = input("what would you like to do with your dog")
