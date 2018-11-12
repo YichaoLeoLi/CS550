@@ -3,19 +3,12 @@
 
 
 
-import pandas as pd
-
 class Element:
 	def __init__(self, number, name, symbol, weight):
 		self.atomicnumber = number
 		self.name = name
 		self.symbol = symbol
 		self.atomicweight = weight
-		self.bp = 0
-		self.mp = 0
-		self.vapordensity = 0
-		self.heatfusion = 0
-		self.sh = 0
 	def getAtomicnumber(self):
 		return self.atomicnumber
 	def getName(self):
@@ -24,18 +17,8 @@ class Element:
 		return self.symbol
 	def getAtomicweight(self):
 		return self.atomicweight
-	def getBp(self):
-		return self.bp
-	def getMp(self):
-		return self.mp
-	def getVapordensity(self):
-		return self.vapordensity
-	def getHeatfusion(self):
-		return self.heatfusion
-	def getSh(self):
-		return self.sh
 	def __str__(self):
-		return "\n\nAtomicnumber: " + str(self.atomicnumber) + "\nName: " + str(self.name) + "\nChemical symbol: " + str(self.symbol) + "\nAtomicweight: " +str(self.atomicweight)
+		return "\n\nAtomicnumber: " + str(self.getAtomicnumber()) + "\nName: " + str(self.getName()) + "\nChemical symbol: " + str(self.getSymbol()) + "\nAtomicweight: " +str(self.getAtomicweight())
 	__repr__ = __str__
 
 #class PeriodicTable:
