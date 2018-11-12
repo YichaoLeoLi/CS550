@@ -6,8 +6,8 @@
 import pandas as pd
 
 class Element:
-	def __init__(self, name, symbol, weight):
-		self.atomicnumber = 0
+	def __init__(self, number, name, symbol, weight):
+		self.atomicnumber = number
 		self.name = name
 		self.symbol = symbol
 		self.atomicweight = weight
@@ -35,7 +35,8 @@ class Element:
 	def getSh(self):
 		return self.sh
 	def __str__(self):
-		return "1"
+		return "\n\nAtomicnumber: " + str(self.atomicnumber) + "\nName: " + str(self.name) + "\nChemical symbol: " + str(self.symbol) + "\nAtomicweight: " +str(self.atomicweight)
+	__repr__ = __str__
 
 #class PeriodicTable:
 	#def __init__(self):
