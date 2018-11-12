@@ -1,15 +1,20 @@
-
-
+#Leo Li
+#11/12/18
+#the periodic table of elements
+#Description: This is the elemnt class of the periodic table that stores all the properties of the element
+#Honor Code: On my honor, I have neither given nor received any unauthorized aid. Leo Li
+#Sources: https://www.dataquest.io/blog/pandas-python-tutorial/
+#https://pandas.pydata.org/pandas-docs/stable/indexing.html
 
 
 
 class Element:
-	def __init__(self, number, name, symbol, weight):
+	def __init__(self, number, name, symbol, weight):#the element possesses atomic number, name, symbol, and the molar mass
 		self.atomicnumber = number
 		self.name = name
 		self.symbol = symbol
 		self.atomicweight = weight
-	def getAtomicnumber(self):
+	def getAtomicnumber(self):#These get function allows the user to securely get the values of the properties
 		return self.atomicnumber
 	def getName(self):
 		return self.name
@@ -17,43 +22,9 @@ class Element:
 		return self.symbol
 	def getAtomicweight(self):
 		return self.atomicweight
-	def __str__(self):
+	def __str__(self):#define the string this way so that the string function can print out information of a single element nicely
 		return "\n\nAtomicnumber: " + str(self.getAtomicnumber()) + "\nName: " + str(self.getName()) + "\nChemical symbol: " + str(self.getSymbol()) + "\nAtomicweight: " +str(self.getAtomicweight())
 	__repr__ = __str__
-
-#class PeriodicTable:
-	#def __init__(self):
-		#self.all_elements = []
-		#self.all_elements.append(Element("Hydrogen","H",1))
-
-	#def display_all_elements(self):
-		#for i in self.all_elements:
-			#print(i.atomicnumber)
-			#print(i.name)
-			#print(i.symbol)
-
-#pt = PeriodicTable()
-#pt.display_all_elements()
-
-# def e(a):
-# 	elements1.atomicnumber = a
-# 	elements1.name = elements.index[a-1]
-# 	s1 = elements['Number']
-# 	elements1.symbol = s1[a-1]
-
-# e(1)
-
-
-
-
-
-
-# print(elements1.getAtomicnumber())
-# print(elements1.getName())
-# print(elements1.getSymbol())
-
-
-
 
 
 
