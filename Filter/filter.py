@@ -49,7 +49,7 @@ def main():
 			percentage()
 	
 	newimg.show()
-	newimg.save("Image1.png", "PNG")
+	newimg.save("Image2.png", "PNG")
 
 def takepixels(a, b):
 	global img,x
