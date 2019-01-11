@@ -4,12 +4,12 @@ import random
 
 counter = 0
 
-for j in range(100):
+for j in range(1000000):
 	x = 0
 	y = 0
 	z = 0
 
-	for i in range(19):
+	for i in range(22):
 		d = random.randint(0,3)
 		if d == 0:
 			x+=1
@@ -27,4 +27,4 @@ for j in range(100):
 		counter+=1
 	else:
 		z = "public transit"
-	print(distance, z, "\n", counter, "%")
+	print(distance, z, "\n", counter/10000, "%")
