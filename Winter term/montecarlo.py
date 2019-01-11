@@ -1,7 +1,7 @@
 #Leo Li
 #01/11/19
 #Dart simulation
-#1. The most you can walk is 19 steps. Once you go to twenty, it is highly likely to get a 51% or 52%
+#1. The most you can walk is 22 steps. Once you go to twenty, it is highly likely to get a 51% or 52%
 #2. Monte Carlo simulations are basically simulations that help people to predict something that involves a lot of randomness in it. It is hard to come up with a probablity when randomness is involved, and instead of teaking an average, the monte carlo simulation can give you a better and more precise prediction. 
 #3 The output of the simulation multiplied by 4 gives you pi!
 
