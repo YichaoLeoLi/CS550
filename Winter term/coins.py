@@ -1,4 +1,7 @@
 import random
+import matplotlib.pyplot as plt
+
+results = []
 
 c = 0
 d = 0
@@ -40,8 +43,25 @@ for x in range(10001):
 	elif b == 10:
 		m+=1
 
+results.append(c)
+results.append(d)
+results.append(e)
+results.append(f)
+results.append(g)
+results.append(h)
+results.append(i)
+results.append(j)
+results.append(k)
+results.append(l)
+results.append(m)
+
 
 print(0,1,2,3,4,5,6,7,8,9,10)
 print(c,d,e,f,g,h,i,j,k,l,m)
 print((d+2*e+3*f+4*g+5*h+6*i+7*j+8*k+9*l+10*m)/1000,"%")
+
+
+#plt.plot([0,1,2,3,4,5,6,7,8,9,10],results,'r')
+plt.bar([0,1,2,3,4,5,6,7,8,9,10],results,color=(0.5,0,0.5,0.7))
+plt.show()
 
