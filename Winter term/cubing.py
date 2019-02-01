@@ -12,7 +12,7 @@ three = 0
 
 stat = []
 
-for i in range(10000):
+for i in range(100):
 	result = 0
 	f4c = random.uniform(104.64,180)
 	for j in range(math.floor(f4c)):
