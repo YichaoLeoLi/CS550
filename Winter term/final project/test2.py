@@ -1,14 +1,9 @@
 from tkinter import *
-
-
-root = Tk()
-
-
-pane = Frame(root)
-Label(pane, text="Pane Title").pack()
-b = Button(pane, width=12, height=12, text="hi")
-b.place(relx=1, x=2, y=2, anchor=NE)
-
-
-root.mainloop()
-
+def clear_search(event):
+   b.delete(0, END) 
+obj = Tk()
+b = Entry(obj,width=100)
+b.insert(0,"Enter the value to search")
+b.bind("<Button-1>", clear_search) 
+b.pack()
+mainloop()
