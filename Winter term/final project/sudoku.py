@@ -1,12 +1,15 @@
 from tkinter import *
 import string
+from PIL import Image
+Img = Image.open("image4.png")
 
-class Sudoku:
+class Display:
 
 	def __init__(self, master):
 		global frame
 		frame = Canvas(master, width = 700, height = 600)
 		frame.pack()
+		self.Img = Img
 		self.a = "easy"
 		self.b = "intermediate"
 		self.c = "hard"
@@ -30,7 +33,11 @@ class Sudoku:
 		self.note_button = Checkbutton(frame, text="note")
 		self.note_button.place(x=400, y=550,anchor=CENTER)
 
+
 		self.sudoku1 = [[0,0,3,0,2,0,6,0,0],[9,0,0,3,0,5,0,0,1],[0,0,1,8,0,6,4,0,0],[0,0,8,1,0,2,9,0,0],[7,0,0,0,0,0,0,0,8],[0,0,6,7,0,8,2,0,0],[0,0,2,6,0,9,5,0,0],[8,0,0,2,0,3,0,0,9],[0,0,5,0,1,0,3,0,0]]
+		self.sudoku2 = [[0,4,5,0,0,0,0,0,0],[8,3,0,0,0,7,4,0,0],[0,0,0,2,0,0,0,5,0],[0,8,4,6,0,0,5,0,1],[2,0,0,8,3,0,0,4,0],[0,0,0,5,0,0,0,0,7],[3,7,0,0,0,5,0,6,0],[0,2,0,0,0,0,0,8,0],[5,6,1,9,0,0,0,7,0]]
+		self.board_print = self.sudoku1
+	
 
  
 	def draw_rectangle(self):
@@ -61,9 +68,15 @@ class Sudoku:
 
 	def change_easy(self):
 		self.dif_button.config(text=self.a)
+		self.erase_board()
+		self.board_print = self.sudoku1
+		self.display_sudoku()
 
 	def change_intermediate(self):
 		self.dif_button.config(text=self.b)
+		self.erase_board()
+		self.board_print = self.sudoku2
+		self.display_sudoku()
 
 	def change_hard(self):
 		self.dif_button.config(text=self.c)
@@ -71,14 +84,29 @@ class Sudoku:
 	def change_evil(self):
 		self.dif_button.config(text=self.d)
 
-	def display_sudoku(self):
+	def erase_board(self):	
 		for i in range(9):
 			for j in range(9):
-				if self.sudoku1[i][j]==0:
-					self.e = Entry(frame,borderwidth=0)
-					self.e.place(x=75.75+51.5*j,y=75.75+51.5*i,anchor=CENTER, width=30)
+				if self.board_print[i][j]==0:
+					pass
 				else:
-					frame.create_text(75.75+51.5*j, 75.75+51.5*i, font=('helvetica',20), text=self.sudoku1[i][j],anchor=CENTER)
+					frame.delete(self.text_box[i][j])
+
+	def display_sudoku(self):
+		self.entry_box = [[0]*9 for i in range(9)]
+		self.text_box = [[0]*9 for i in range(9)]
+		for i in range(9):
+			for j in range(9):
+				if self.board_print[i][j]==0:
+					# self.e = Entry(frame,borderwidth=0,justify=CENTER,font=('helvetica',20),textvariable=self.numberr)
+					# self.entry_box[i][j]=self.e
+					# self.e.place(x=75.75+51.5*j,y=75.75+51.5*i,anchor=CENTER, width=30)
+					pass
+				else:
+					self.text = frame.create_text(75.75+51.5*j, 75.75+51.5*i, font=('helvetica',20), text=self.board_print[i][j],anchor=CENTER)
+					self.text_box[i][j]=self.text
+
+
 
 
 
@@ -87,7 +115,7 @@ root = Tk()
 
 def main():
 
-	sudoku = Sudoku(root)
+	sudoku = Display(root)
 	sudoku.draw_rectangle()
 	sudoku.draw_vertlines()
 	sudoku.draw_horilines()
@@ -95,7 +123,7 @@ def main():
 	sudoku.show_letters()
 	sudoku.display_sudoku()
 
-	root.mainloop()
+	root.mainloop() 
 
 
 
