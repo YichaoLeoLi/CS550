@@ -1,7 +1,5 @@
 from tkinter import *
 import string
-from PIL import Image
-Img = Image.open("image4.png")
 
 class Display:
 
@@ -9,7 +7,6 @@ class Display:
 		global frame
 		frame = Canvas(master, width = 700, height = 600)
 		frame.pack()
-		self.Img = Img
 		self.a = "easy"
 		self.b = "intermediate"
 		self.c = "hard"
@@ -38,7 +35,12 @@ class Display:
 		self.sudoku2 = [[0,4,5,0,0,0,0,0,0],[8,3,0,0,0,7,4,0,0],[0,0,0,2,0,0,0,5,0],[0,8,4,6,0,0,5,0,1],[2,0,0,8,3,0,0,4,0],[0,0,0,5,0,0,0,0,7],[3,7,0,0,0,5,0,6,0],[0,2,0,0,0,0,0,8,0],[5,6,1,9,0,0,0,7,0]]
 		self.board_print = self.sudoku1
 	
-
+		self.x = 0
+		self.y = 0
+		self.char = 0
+		self.pressed=False
+		self.enter_number=0
+		self.num_list=[[0]*9 for i in range(9)]
  
 	def draw_rectangle(self):
 		frame.create_rectangle(50, 50, 512, 512, width = 2)
@@ -65,6 +67,29 @@ class Display:
 		for i in range(1,10):
 			frame.create_text(30, 75.75+51.5*(i-1), text=string.ascii_uppercase[i-1])
 
+	def erase_board(self):	
+		for i in range(9):
+			for j in range(9):
+				if self.num_list[j][i]!=0:
+					frame.delete(self.num_list[j][i])
+				elif self.text_box[i][j]!=0:
+					frame.delete(self.text_box[i][j])
+		self.num_list = [[0]*9 for i in range(9)]
+
+	def display_sudoku(self):
+		self.entry_box = [[0]*9 for i in range(9)]
+		self.text_box = [[0]*9 for i in range(9)]
+		for i in range(9):
+			for j in range(9):
+				if self.board_print[i][j]==0:
+					# self.e = Entry(frame,borderwidth=0,justify=CENTER,font=('helvetica',20),textvariable=self.numberr)
+					# self.entry_box[i][j]=self.e
+					# self.e.place(x=75.75+51.5*j,y=75.75+51.5*i,anchor=CENTER, width=30)
+					pass
+				else:
+					self.text = frame.create_text(75.75+51.5*j, 75.75+51.5*i, font=('helvetica',20), text=self.board_print[i][j],anchor=CENTER)
+					self.text_box[i][j]=self.text
+
 
 	def change_easy(self):
 		self.dif_button.config(text=self.a)
@@ -84,38 +109,56 @@ class Display:
 	def change_evil(self):
 		self.dif_button.config(text=self.d)
 
-	def erase_board(self):	
-		for i in range(9):
-			for j in range(9):
-				if self.board_print[i][j]==0:
-					pass
-				else:
-					frame.delete(self.text_box[i][j])
-
-	def display_sudoku(self):
-		self.entry_box = [[0]*9 for i in range(9)]
-		self.text_box = [[0]*9 for i in range(9)]
-		for i in range(9):
-			for j in range(9):
-				if self.board_print[i][j]==0:
-					# self.e = Entry(frame,borderwidth=0,justify=CENTER,font=('helvetica',20),textvariable=self.numberr)
-					# self.entry_box[i][j]=self.e
-					# self.e.place(x=75.75+51.5*j,y=75.75+51.5*i,anchor=CENTER, width=30)
-					pass
-				else:
-					self.text = frame.create_text(75.75+51.5*j, 75.75+51.5*i, font=('helvetica',20), text=self.board_print[i][j],anchor=CENTER)
-					self.text_box[i][j]=self.text
 
 
+	def trace_mouse(self, event):
+		self.x, self.y = event.x, event.y
+		self.cord = []
+		for c in range(1,10):
+			for d in range(1,10):
+				if self.x >=50+51.3*(c-1) and self.x<=101.3+51.3*(c-1) and self.y>=50+51.3*(d-1) and self.y<=101.3+51.3*(d-1):
+					print(c,d)
+					self.cord.append(c)
+					self.cord.append(d)
+					self.pressed=True
+					
+
+		#print(self.x, self.y)
+
+	def trace_keyboard(self, event):
+		#print("pressed", str(event.char))
+		self.char = str(event.char)
+		#print(self.board_print[self.cord[1]-1][self.cord[0]-1])
+		if self.char == "1" or self.char == "2" or self.char == "3" or self.char == "4" or self.char == "5" or self.char == "6" or self.char == "7" or self.char == "8" or self.char == "9":
+			if self.pressed==True and self.board_print[self.cord[1]-1][self.cord[0]-1] == 0:
+				if self.num_list[self.cord[0]-1][self.cord[1]-1]==0:
+					self.enter_number = frame.create_text(75.75+51.5*(self.cord[0]-1), 75.75+51.5*(self.cord[1]-1), font=('helvetica',20), text=self.char)
+					self.num_list[self.cord[0]-1][self.cord[1]-1] = self.enter_number
+				elif self.num_list[self.cord[0]-1][self.cord[1]-1]!=0:
+					frame.delete(self.num_list[self.cord[0]-1][self.cord[1]-1])
+					self.enter_number = frame.create_text(75.75+51.5*(self.cord[0]-1), 75.75+51.5*(self.cord[1]-1), font=('helvetica',20), text=self.char)
+					self.num_list[self.cord[0]-1][self.cord[1]-1] = self.enter_number
+	def trace_delete(self, event):
+		 if self.pressed==True and self.board_print[self.cord[1]-1][self.cord[0]-1] == 0:
+		 	if self.num_list[self.cord[0]-1][self.cord[1]-1]!=0:
+		 		frame.delete(self.num_list[self.cord[0]-1][self.cord[1]-1])
+		 		self.num_list[self.cord[0]-1][self.cord[1]-1]=0
+			
 
 
 
-root = Tk()
+
+
+
 
 
 def main():
-
+	root = Tk()
 	sudoku = Display(root)
+	#root.bind("<Motion>", sudoku.trace_mouse)
+	root.bind("<Key>", sudoku.trace_keyboard)	
+	root.bind("<Button-1>", sudoku.trace_mouse)
+	root.bind("<BackSpace>", sudoku.trace_delete)
 	sudoku.draw_rectangle()
 	sudoku.draw_vertlines()
 	sudoku.draw_horilines()
