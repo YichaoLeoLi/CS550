@@ -11,6 +11,8 @@ import numpy as np
 LBLUECOLOR = "#%02x%02x%02x" % (176,224,230) 	# https://stackoverflow.com/questions/41383849/setting-the-fill-of-a-rectangle-drawn-with-canvas-to-an-rgb-value
 DBLUECOLOR = "#%02x%02x%02x" % (163,206,220)
 FONTCOLOR  = "#%02x%02x%02x" % (106,90,205)
+LREDCOLOR = "#%02x%02x%02x" % (255,182,193)
+DREDCOLOR = "#%02x%02x%02x" % (255,105,180)
 
 class Sudoku:
 	def __init__(self, board):
@@ -94,6 +96,74 @@ class Sudoku:
 					else:
 						return sol
 			
+	def wrong_entry(self,board_entries):
+		wrong_entries = []
+		wrong_entry_row = []
+		wrong_entry_column = []
+		wrong_entry_box = []
+
+		for i in range(9):
+			for j in range(9):
+				entry = board_entries[i][j]
+				error = 0
+
+				for x in range(9):
+					if self.board[i][x] != 0 and self.board[i][x]== entry:
+						wrong_entry_row.append(i)
+						error += 1
+					if x != j:				
+						if board_entries[i][x] != 0 and board_entries[i][x]== entry:
+							wrong_entry_row.append(i)
+							error += 1
+				
+				for y in range(9):
+					if self.board[y][j] != 0 and self.board[y][j]== entry:
+						wrong_entry_column.append(j)
+						error += 1
+					if y != i:				
+						if board_entries[y][j] != 0 and board_entries[y][j]== entry:
+							wrong_entry_row.append(i)
+							error += 1
+
+				horiz_block = 0
+				verti_block = 0
+				if 0 <= i <= 2:
+					horiz_block = 0
+				elif 2 < i <= 5:
+					horiz_block = 3
+				else:
+					horiz_block = 6
+				if 0 <= j <= 2:
+					verti_block = 0
+				elif 2 < j <= 5:
+					verti_block = 3
+				else:
+					verti_block = 6
+
+				for x in range(horiz_block, horiz_block+3):
+					for y in range(verti_block, verti_block+3):
+						if self.board[x][y] != 0 and self.board[x][y]== entry:
+							for e in range(horiz_block, horiz_block+3):
+								for g in range(verti_block, verti_block+3):
+									wrong_entry_box.append([e,g])
+							error += 1
+
+						if x != i and y != j:				
+							if board_entries[x][y] != 0 and board_entries[x][y]== entry:
+								for e in range(horiz_block, horiz_block+3):
+									for g in range(verti_block, verti_block+3):
+										wrong_entry_box.append([e,g])
+								error += 1
+
+				if error != 0:
+					wrong_entries.append([i,j])
+
+				# print(i,j)
+
+		return wrong_entries, wrong_entry_box, wrong_entry_row, wrong_entry_column
+		# return(self.board)
+			
+
 
 class Board:
 	def __init__(self):
@@ -203,6 +273,9 @@ class Display:
 		self.note_button = Checkbutton(self.frame, text="note", variable=self.var)
 		self.note_button.place(x=400, y=550,anchor=CENTER)
 
+		self.check_button = Button(self.frame, text="check", width=13,command=self.check)
+		self.check_button.place(x=300, y=550,anchor=CENTER)
+
 		initial_board = Board()
 		sudoku1 = initial_board.generate('easy')
 		# self.sudoku1 = [[0,0,3,0,2,0,6,0,0],[9,0,0,3,0,5,0,0,1],[0,0,1,8,0,6,4,0,0],[0,0,8,1,0,2,9,0,0],[7,0,0,0,0,0,0,0,8],[0,0,6,7,0,8,2,0,0],[0,0,2,6,0,9,5,0,0],[8,0,0,2,0,3,0,0,9],[0,0,5,0,1,0,3,0,0]]
@@ -210,14 +283,16 @@ class Display:
 	
 		self.x = 0
 		self.y = 0
-		self.xcord = 0
-		self.ycord = 0
 		self.char = 0
 		self.pressed=False
 		self.enter_number=0
+		self.num_list = [[0]*9 for i in range(9)]
+		self.entered_list = [[0 for x in range(9)] for x in range(9)]
+		self.xcord = 0
+		self.ycord = 0
 		self.enter_note=0
-		self.num_list=[[0]*9 for i in range(9)]
-		self.note_list=[['a','a',0] for i in range(82)]
+		self.note_list=[[[['a' for x in range(3)]for x in range(3)]for x in range(9)]for x in range(9)]
+		print(self.note_list)
  
 	# def draw_rectangle(self,*args,loc=None,**kwargs):
 	# 	self.tile_states[loc] = False  # All tiles are initially not activated
@@ -268,7 +343,6 @@ class Display:
 
 
 	def change_easy(self):
-		self.e = self.a
 		self.dif_button.config(text=self.a)
 		self.erase_board()
 		easy_board = Board()
@@ -280,8 +354,10 @@ class Display:
 				self.frame.itemconfig(self.tiles[9*x+y],fill="white")
 				self.tile_states[9*x+y] = False
 
+		for x in range(9):
+			print(*self.board_print[x])
+
 	def change_intermediate(self):
-		self.e = self.b
 		self.dif_button.config(text=self.b)
 		self.erase_board()
 		intermediate_board = Board()
@@ -294,7 +370,6 @@ class Display:
 				self.tile_states[9*x+y] = False
 
 	def change_hard(self):
-		self.e = self.c
 		self.dif_button.config(text=self.c)
 		self.erase_board()
 		hard_board = Board()
@@ -307,7 +382,6 @@ class Display:
 				self.tile_states[9*x+y] = False
 
 	def change_evil(self):
-		self.e = self.d
 		self.dif_button.config(text=self.d)
 		self.erase_board()
 		evil_board = Board()
@@ -318,7 +392,9 @@ class Display:
 			for y in range(9):
 				self.frame.itemconfig(self.tiles[9*x+y],fill="white")
 				self.tile_states[9*x+y] = False
-				
+
+
+
 	def new_game(self):
 		if self.e == self.a:
 			self.change_easy()
@@ -334,6 +410,7 @@ class Display:
 				self.frame.itemconfig(self.tiles[9*x+y],fill="white")
 				self.tile_states[9*x+y] = False
 
+
 	def trace_mouse(self, event):
 		# self.itemconfig(self.tiles[loc],fill="white" if self.tile_states[loc] else DBLUECOLOR)
 		# 	self.tile_states[loc]=not self.tile_states[loc]
@@ -341,7 +418,6 @@ class Display:
 
 		self.x, self.y = event.x, event.y
 		self.cord = []
-
 		for c in range(1,10):
 			for d in range(1,10):
 				if self.x >= 50+51*(c-1) and self.x <= 50+51*c and self.y >= 50+51*(d-1) and self.y <= 50+51*d:
@@ -355,18 +431,18 @@ class Display:
 
 					self.frame.itemconfig(self.tiles[9*(c-1)+(d-1)],fill="white" if self.board_print[d-1][c-1] != 0 or self.tile_states[9*(c-1)+(d-1)] else DBLUECOLOR)
 					self.tile_states[9*(c-1)+(d-1)]	= not self.tile_states[9*(c-1)+(d-1)]
-					# print(tile_states)
+					# print(self.tile_states)
 					self.frame.update()
 					self.cord.append(c-1)
 					self.cord.append(d-1)
-					print(self.cord)
-					self.pressed = True
+					if self.tile_states[9*(c-1)+(d-1)]:
+						self.pressed = True
+					else:
+						self.pressed = False
 					
 	def trace_keyboard(self, event):
 		self.char = str(event.char)
 		chars = ["1", "2", "3","4", "5", "6","7", "8", "9",]
-		print(self.cord)
-		self.note_number = (self.cord[1]+1)*9-(8-self.cord[0])
 		if self.char in chars:
 			if self.pressed == True and self.board_print[self.cord[1]][self.cord[0]] == 0 and self.var.get()==0:
 				if self.num_list[self.cord[0]][self.cord[1]] == 0:
@@ -376,6 +452,7 @@ class Display:
 
 					# print(self.tiles[9*(self.cord[0]-1)+(self.cord[1]-1)])
 					self.num_list[self.cord[0]][self.cord[1]] = self.enter_number
+					self.entered_list[self.cord[1]][self.cord[0]] = int(self.char)
 					self.pressed = False
 
 				elif self.num_list[self.cord[0]][self.cord[1]]!=0:
@@ -383,10 +460,14 @@ class Display:
 					self.enter_number = self.frame.create_text(76+51*(self.cord[0]), 76+51*(self.cord[1]), font=('Chalkduster',20), text=self.char, fill=FONTCOLOR)
 					self.frame.itemconfig(self.tiles[9*self.cord[0]+self.cord[1]],fill="white")
 					self.tile_states[9*self.cord[0]+self.cord[1]] = False
+
 					# print(self.tiles[9*self.cord[0]+self.cord[1]])
 
 					self.num_list[self.cord[0]][self.cord[1]] = self.enter_number
+					self.entered_list[self.cord[1]][self.cord[0]] = int(self.char)
+
 					self.pressed = False
+
 
 			elif self.board_print[self.cord[1]][self.cord[0]] == 0:
 				if self.num_list[self.cord[0]][self.cord[1]] == 0:
@@ -407,31 +488,52 @@ class Display:
 				 		
 
 			 		self.enter_note = self.frame.create_text(76+51*(self.cord[0])+51/3*self.xcord, 76+51*(self.cord[1])+51/3*self.ycord, font=('Chalkduster',10), text=self.char, fill=FONTCOLOR)
-			 		self.note_list[self.note_number][2] = self.enter_note
-			 		self.note_list[self.note_number][0] = self.xcord
-			 		self.note_list[self.note_number][1] = self.ycord
+			 		#self.note_list[self.note_number][2] = self.enter_note
+			 		#self.note_list[self.note_number][0] = self.xcord
+			 		#self.note_list[self.note_number][1] = self.ycord
 			 		self.frame.itemconfig(self.tiles[9*self.cord[0]+self.cord[1]],fill="white")
 			 		self.tile_states[9*self.cord[0]+self.cord[1]] = False
 
-				elif self.num_list[self.cord[0]][self.cord[1]] == 0 and self.note_list[self.note_number][2]!=0:
-			 		self.frame.delete(self.note_list[self.note_number][2])
-
-
-			# 		# print(self.tiles[9*(self.cord[0]-1)+(self.cord[1]-1)])
-			# 		self.num_list[self.cord[0]][self.cord[1]] = self.enter_number
-
-				
+				#elif self.num_list[self.cord[0]][self.cord[1]] == 0 and self.note_list[self.note_number][2]!=0:
+			 		#self.frame.delete(self.note_list[self.note_number][2])
 
 	def trace_delete(self, event):
 		 if self.pressed==True and self.board_print[self.cord[1]][self.cord[0]] == 0:
 		 	if self.num_list[self.cord[0]][self.cord[1]]!=0:
 		 		self.frame.delete(self.num_list[self.cord[0]][self.cord[1]])
 		 		self.num_list[self.cord[0]][self.cord[1]]=0
+		 		self.entered_list[self.cord[1]][self.cord[0]] = 0
 		 		self.frame.itemconfig(self.tiles[9*self.cord[0]+self.cord[1]],fill="white")
 		 		self.tile_states[9*self.cord[0]+self.cord[1]] = False
 		 		self.pressed = False
-			
 
+	def check(self):
+		check_board = Sudoku(self.board_print)
+		# print(self.entered_list)
+		wrong_entries, wrong_entry_box, wrong_entry_row, wrong_entry_column = check_board.wrong_entry(self.entered_list)
+
+
+		for x in range(len(wrong_entry_box)):
+			tile_num = 9*wrong_entry_box[x][1] + wrong_entry_box[x][0]
+			self.frame.itemconfig(self.tiles[tile_num],fill=LREDCOLOR)
+		
+		for x in range(len(wrong_entry_row)):
+			for y in range(9):
+				tile_num = wrong_entry_row[x] + 9*y
+				self.frame.itemconfig(self.tiles[tile_num],fill=LREDCOLOR)
+
+		for x in range(len(wrong_entry_column)):
+			for y in range(9):
+				tile_num = 9*wrong_entry_column[x] + y
+				# print(tile_num)
+				self.frame.itemconfig(self.tiles[tile_num],fill=LREDCOLOR)
+
+		for x in range(len(wrong_entries)):
+			tile_num = 9*wrong_entries[x][1] + wrong_entries[x][0]
+			self.frame.itemconfig(self.tiles[tile_num],fill=DREDCOLOR)
+
+
+		# print(wrong_entry_box)
 
 
 
